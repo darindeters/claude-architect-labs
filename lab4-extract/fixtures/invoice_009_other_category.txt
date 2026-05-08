@@ -1,0 +1,16 @@
+PineCrest Recycling Co.
+Invoice INV-PC-09112
+
+Date: 2026-04-09
+Due: 2026-05-09
+
+Quarterly recycling pickup service ......... $480.00
+E-waste disposal (electronics, monitors) ... $145.00
+
+Subtotal: $625.00
+Tax: $51.56
+Total: $676.56
+
+(Vendor category doesn't fit any defined enum cleanly — the model should
+set expense_category='other' and put 'recycling / waste disposal' in
+expense_category_detail.)

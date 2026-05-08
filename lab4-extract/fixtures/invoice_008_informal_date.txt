@@ -1,0 +1,16 @@
+LOCAL PLUMBER LLC
+Invoice 4421
+
+Date: 03/14/26
+Due: 30 days
+
+Service call ........... $185.00
+Parts (valve, gasket).. $42.50
+
+Subtotal: $227.50
+Tax: $18.77
+Total: $246.27
+
+Format normalization: '03/14/26' should extract as '2026-03-14'.
+
+Category: contractor services

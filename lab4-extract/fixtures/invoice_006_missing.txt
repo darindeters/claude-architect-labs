@@ -1,0 +1,12 @@
+RECEIPT
+
+Coffee — $4.50
+Pastry — $3.75
+Total — $8.25
+
+Date: today
+Thanks for your business!
+
+(No vendor letterhead, no invoice number, no due date — the model
+should return null for vendor_name, invoice_number, due_date rather
+than guessing from context. issue_date is ambiguous; null is correct.)

@@ -1,0 +1,34 @@
+{
+  "impact of AI on creative industries": [
+    {
+      "url": "https://example.org/visual-arts-ai-2025",
+      "title": "AI's effect on visual arts: a 2025 survey",
+      "snippet": "A landscape view of generative image tools across professional studios.",
+      "publication_date": "2025-09-12"
+    },
+    {
+      "url": "https://example.org/music-production-ai",
+      "title": "How music producers are using AI in 2025",
+      "snippet": "Stems separation, mastering, and assisted composition workflows.",
+      "publication_date": "2025-08-30"
+    },
+    {
+      "url": "https://example.org/film-vfx-pipelines",
+      "title": "AI in film VFX pipelines",
+      "snippet": "From rotoscoping to shot extension, AI's role in post-production.",
+      "publication_date": "2025-10-04"
+    },
+    {
+      "url": "https://example.org/writing-and-publishing-ai",
+      "title": "AI tools in writing, journalism, and publishing",
+      "snippet": "Editorial workflows, fact-checking, and the disclosure debate.",
+      "publication_date": "2025-07-18"
+    },
+    {
+      "url": "https://example.org/creative-economy-jobs-survey",
+      "title": "Creative economy jobs: AI displacement vs augmentation",
+      "snippet": "Labor data across visual arts, music, writing, film, and design.",
+      "publication_date": "2025-11-02"
+    }
+  ]
+}

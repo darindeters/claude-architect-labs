@@ -1,0 +1,20 @@
+ACME LIGHTING CO.
+123 Industrial Way, Portland, OR 97201
+
+INVOICE
+Invoice #: INV-2026-0142
+Date: 2026-04-12
+Due: 2026-05-12
+
+Bill to: Northstar Operations LLC
+
+Line items:
+- 12x LED panel fixtures @ $48.00 ea ........... $576.00
+- Install labor (4 hrs) @ $95.00/hr ............. $380.00
+- Shipping ...................................... $65.00
+
+Subtotal: $1,021.00
+Tax (8.25%): $84.23
+Total: $1,105.23
+
+Category: office supplies (lighting / fixtures)

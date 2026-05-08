@@ -1,0 +1,16 @@
+StationerFlow Supplies
+Invoice INV-2026-553
+Date: 2026-04-04
+Due: 2026-05-04
+
+Premium notebook (12-pack) .......... $84.00
+Pens, fine point (24-pack) .......... $36.00
+Sticky notes (6-pack) ............... $22.00
+
+Subtotal: $142.00
+Tax: $11.71
+Total: $200.00     ← line items + tax = $153.71, NOT $200.00
+
+The semantic validator should flag this with calculated $153.71 vs stated $200.00.
+
+Category: office supplies

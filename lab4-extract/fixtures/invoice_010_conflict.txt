@@ -1,0 +1,19 @@
+RIVERSTONE LAW PARTNERS
+Statement of Services
+
+Invoice 2026-0419
+Issued: 2026-04-19
+Due: 2026-05-19
+
+Legal services rendered (April):
+  Contract review (3.5 hrs @ $400) ........ $1,400.00
+  Vendor agreement drafting (2 hrs) ....... $800.00
+
+Total amount due: $2,200.00
+
+Please remit $2,400.00 by 2026-05-19.
+
+(Two different total figures appear in the source: $2,200.00 in the table
+and $2,400.00 in the remit line. The model should set conflict_detected=true
+and explain the discrepancy in notes. stated_total can be either value as
+long as the conflict is flagged.)

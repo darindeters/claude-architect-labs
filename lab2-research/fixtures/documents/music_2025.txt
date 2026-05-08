@@ -1,0 +1,16 @@
+Title: AI in music production — 2025 industry estimate
+Source: https://example.org/music-revenue-2025
+Publication date: 2025-10-22
+
+A separate 2025 industry estimate places annual revenue from AI-assisted
+music production tools at $680 million globally, citing rapid growth in
+the assisted-mastering and stem-separation segments.
+
+This figure differs notably from prior estimates published in 2024
+(approximately $420 million). The two estimates reflect different
+publication dates and different methodologies — the 2025 figure includes
+revenue from in-DAW AI features that were not categorized as standalone
+tools in the 2024 methodology.
+
+Adoption among independent producers in 2025 is estimated at 54%, up from
+31% in mid-2024.

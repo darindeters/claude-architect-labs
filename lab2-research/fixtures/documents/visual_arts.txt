@@ -1,0 +1,19 @@
+Title: AI's effect on visual arts: a 2025 survey
+Source: https://example.org/visual-arts-ai-2025
+Publication date: 2025-09-12
+
+A 2025 industry survey of 1,200 professional visual artists found that 47%
+report using generative AI tools at least weekly in their professional
+workflow. Adoption is concentrated in concept art, reference image
+generation, and rapid iteration during early-stage design.
+
+The same survey reports that commission income for traditional digital
+illustrators declined by approximately 18% year-over-year, with the steepest
+declines in low-budget commercial work (book covers, stock illustration,
+small-business branding). High-end editorial and gallery work was
+substantially less affected.
+
+A counter-trend has emerged: artists who incorporate generative AI as a
+declared part of their workflow report stable or growing client bases,
+particularly in studio environments where AI is one tool in a
+human-directed pipeline.

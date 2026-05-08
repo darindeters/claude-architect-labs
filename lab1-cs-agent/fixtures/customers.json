@@ -1,0 +1,52 @@
+{
+  "customers": [
+    {
+      "id": "CUS-001",
+      "name": "Alice Chen",
+      "email": "alice@example.com",
+      "tier": "gold",
+      "orders": ["ORD-1001", "ORD-1002"]
+    },
+    {
+      "id": "CUS-002",
+      "name": "Bob Singh",
+      "email": "bob@example.com",
+      "tier": "standard",
+      "orders": ["ORD-1003"]
+    },
+    {
+      "id": "CUS-003",
+      "name": "Carmen Diaz",
+      "email": "carmen@example.com",
+      "tier": "standard",
+      "orders": ["ORD-1004", "ORD-1005", "ORD-1006"]
+    },
+    {
+      "id": "CUS-004",
+      "name": "David Park",
+      "email": "david@example.com",
+      "tier": "gold",
+      "orders": []
+    },
+    {
+      "id": "CUS-005",
+      "name": "Bob Singh",
+      "email": "bob.singh@example.com",
+      "tier": "standard",
+      "orders": ["ORD-1007"]
+    }
+  ],
+  "orders": {
+    "ORD-1001": {"customer_id": "CUS-001", "amount": 89.00,  "status": "delivered", "days_since_delivery": 5},
+    "ORD-1002": {"customer_id": "CUS-001", "amount": 245.50, "status": "delivered", "days_since_delivery": 32},
+    "ORD-1003": {"customer_id": "CUS-002", "amount": 119.99, "status": "delivered", "days_since_delivery": 9},
+    "ORD-1004": {"customer_id": "CUS-003", "amount": 749.00, "status": "delivered", "days_since_delivery": 3},
+    "ORD-1005": {"customer_id": "CUS-003", "amount": 39.00,  "status": "in_transit", "days_since_delivery": null},
+    "ORD-1006": {"customer_id": "CUS-003", "amount": 220.00, "status": "delivered", "days_since_delivery": 95},
+    "ORD-1007": {"customer_id": "CUS-005", "amount": 64.00,  "status": "delivered", "days_since_delivery": 2}
+  },
+  "policies": {
+    "refund_window_days": 30,
+    "auto_approve_max": 500
+  }
+}

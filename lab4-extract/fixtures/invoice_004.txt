@@ -1,0 +1,13 @@
+Jet Travel — itinerary receipt
+
+Receipt # JT-998211
+Travel date: 2026-05-21
+Issued: 2026-04-22
+
+PDX → JFK round trip ............ $612.00
+Seat selection (premium) ........ $90.00
+Baggage ......................... $35.00
+
+Total charged: $737.00
+
+Category: travel

@@ -1,0 +1,17 @@
+Diaz Design Studio
+contact@diazdesign.example
+
+INVOICE 0007
+Date: 2026-02-18
+Due upon receipt.
+
+Brand identity refresh:
+  Discovery + interviews ........... $2,400.00
+  Logomark concepts (3 rounds) ..... $3,200.00
+  Typography & color system ........ $1,800.00
+
+Subtotal: $7,400.00
+No tax applied (out of state).
+Total: $7,400.00
+
+Category: contractor services

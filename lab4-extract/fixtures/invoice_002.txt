@@ -1,0 +1,15 @@
+Cloud DB Hosting — monthly statement
+
+Invoice INV-77821
+Issued: 2026-03-01
+Due: 2026-03-31
+
+Subscription: Production cluster (Standard tier) — $1,200.00
+Add-on: Read replica — $300.00
+Add-on: Daily backups — $90.00
+
+Subtotal: $1,590.00
+Tax: $0.00
+Amount due: $1,590.00
+
+Category: software / SaaS

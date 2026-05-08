@@ -1,0 +1,12 @@
+Title: How music producers are using AI — 2024 mid-year report
+Source: https://example.org/music-production-ai
+Publication date: 2024-06-15
+
+Among independent producers surveyed in mid-2024, generative AI tools were
+used regularly by 31% of respondents, primarily for stem separation, drum
+programming, and demo-stage composition. Adoption among major-label
+production teams was lower, around 12%, citing rights and licensing
+concerns.
+
+Annual industry revenue from AI-assisted music production tools was
+estimated at $420 million globally for 2024.
