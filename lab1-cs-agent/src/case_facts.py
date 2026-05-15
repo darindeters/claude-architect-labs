@@ -12,20 +12,35 @@ degrades into vague summary.
 from typing import Any
 
 
+# The canonical case-facts shape used in the walkthrough.
+# Start with this exact structure — it makes a turn-3 amount answerable at
+# turn 18 because every field is concrete and comparable. Avoid free-text
+# "summary" fields here; summaries drift, structured facts don't.
+CASE_FACTS_TEMPLATE: dict[str, Any] = {
+    "customer_id": None,
+    "order_ids": [],
+    "amounts_discussed": [],          # e.g., [89.99, 245.00]
+    "dates_mentioned": [],            # e.g., ["2026-04-12"]
+    "customer_expectations": [],      # e.g., ["full refund + shipping"]
+}
+
+
 def extract_case_facts(messages: list[dict]) -> dict[str, Any]:
     """Walk the conversation history and pull transactional facts.
 
-    Should accumulate things like:
-      - customer_id
-      - order_ids mentioned
-      - amounts (refund requests, totals discussed)
-      - dates (delivery dates, refund window references)
-      - customer-stated expectations ("I want full refund + shipping")
+    Should accumulate, into the CASE_FACTS_TEMPLATE shape:
+      - customer_id (from a successful get_customer tool_result)
+      - order_ids   (from any successful lookup_order or process_refund call)
+      - amounts_discussed (from refund requests in user messages and tool results)
+      - dates_mentioned   (delivery dates, refund-window references)
+      - customer_expectations (free-text intents stated by the user)
     """
-    # TODO (step 6): parse tool_use blocks and tool_result blocks from
-    # messages and accumulate facts. Start simple — pull customer_id and
-    # order_ids from successful tool results.
-    return {}
+    # TODO (recipe 6): parse tool_use blocks and tool_result blocks from
+    # messages and accumulate into a copy of CASE_FACTS_TEMPLATE.
+    # Start simple — pull customer_id from get_customer results, and
+    # order_ids from any tool input/result referencing one.
+    facts = {k: (list(v) if isinstance(v, list) else v) for k, v in CASE_FACTS_TEMPLATE.items()}
+    return facts if any(facts.values()) else {}
 
 
 def inject_case_facts(system_prompt: str, facts: dict[str, Any]) -> str:

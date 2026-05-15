@@ -49,7 +49,21 @@ class Invoice(BaseModel):
     line_items: list[LineItem] = Field(default_factory=list)
     stated_subtotal: Optional[float] = None
     stated_tax: Optional[float] = None
-    stated_total: Optional[float] = Field(default=None, description="Total as stated on the document — do NOT recompute")
+    stated_total: Optional[float] = Field(
+        default=None,
+        description="Total as stated on the document — verbatim; do NOT recompute.",
+    )
+    # Recipe 5 — dual totals. The model is asked to compute this INDEPENDENTLY
+    # from the line items. The semantic validator compares the two and flips
+    # conflict_detected when they disagree.
+    calculated_total: Optional[float] = Field(
+        default=None,
+        description=(
+            "Sum of line_items[].amount (or quantity*unit_price) computed by you "
+            "INDEPENDENTLY of stated_total. Compute even if it happens to match. "
+            "Do NOT copy stated_total into this field."
+        ),
+    )
 
     # Categorization
     expense_category: ExpenseCategory = Field(default=ExpenseCategory.unclear)
@@ -60,6 +74,10 @@ class Invoice(BaseModel):
 
     # Self-correction signals
     conflict_detected: bool = Field(default=False, description="True if the source contains internally contradictory values")
+    conflict_details: Optional[str] = Field(
+        default=None,
+        description="When conflict_detected=True, a one-line description naming the two values that disagree.",
+    )
     notes: Optional[str] = None
 
 

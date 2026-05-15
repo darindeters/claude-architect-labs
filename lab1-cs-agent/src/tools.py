@@ -28,8 +28,14 @@ FIXTURES = json.loads((Path(__file__).parent.parent / "fixtures" / "customers.js
 TOOLS = [
     {
         "name": "get_customer",
-        # TODO (step 2): weak description — expand with input format, example
-        # queries, edge cases, and explicit "use this when / not when".
+        # TODO (recipe 2): weak description — expand with input format, example
+        # queries, edge cases, and explicit "use this when / do NOT use this when".
+        # Reference shape from the walkthrough:
+        #   "Verify a customer's identity. Input: name (string) or email (string)
+        #    — provide at least one. Use BEFORE any order operation. Use when the
+        #    user gives their name, email, or order context. Do NOT use to look
+        #    up orders directly (use lookup_order). Returns the customer record
+        #    or a structured 'no match' / 'ambiguous' result."
         "description": "Retrieves customer information.",
         "input_schema": {
             "type": "object",
@@ -83,13 +89,22 @@ TOOLS = [
 
 
 # ---------------------------------------------------------------------------
-# Structured error helper (step 5)
+# Structured error helper (recipe 5 in the guide)
 # ---------------------------------------------------------------------------
 
 def error_response(category: str, retryable: bool, message: str) -> dict[str, Any]:
     """Return a structured tool error the agent can reason about.
 
     category: 'transient' | 'validation' | 'business' | 'permission'
+      - transient   → upstream timeout, rate limit, retryable
+      - validation  → bad input, not retryable, model needs to reformulate
+      - business    → policy says no (refund window expired); same as the
+                      walkthrough's 'business_rule' category
+      - permission  → auth / authorization failure (similar to guide's 'auth')
+
+    The agent's tool descriptions tell it the contract:
+      isRetryable=True  → retry the same call (up to 2 attempts)
+      isRetryable=False → do NOT retry; explain to the user.
     """
     return {
         "isError": True,
@@ -97,6 +112,11 @@ def error_response(category: str, retryable: bool, message: str) -> dict[str, An
         "isRetryable": retryable,
         "message": message,
     }
+
+
+# Alias for the walkthrough's preferred name. The guide writes `error(...)`;
+# the scaffold uses `error_response(...)`. Both work; kwargs work in either.
+error = error_response
 
 
 # ---------------------------------------------------------------------------

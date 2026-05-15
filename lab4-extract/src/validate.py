@@ -9,15 +9,27 @@ discrepancies.
 from .schema import Invoice
 
 
-def validate_totals_match(inv: Invoice) -> str | None:
-    """Return an error message if line items don't reconcile with the stated total.
+EPSILON = 0.05   # cents-level tolerance for floating-point and rounding
 
-    Returns None when everything checks out (or when there's not enough
-    data to check, which is also fine — that's a job for human review,
-    not for this validator to flag.)
+
+def validate_totals_match(inv: Invoice) -> str | None:
+    """Return an error message if the two totals disagree.
+
+    The walkthrough's recipe 5 pattern: the model produces stated_total AND
+    calculated_total INDEPENDENTLY. This validator runs in Python (not in the
+    model's head) and compares them. The deterministic comparison is the
+    whole point — semantic validation lives in code, not in a prompt.
+
+    Returns None when:
+      - both totals are within EPSILON of each other, OR
+      - there isn't enough data to check (one or both are None).
+    Sets inv.conflict_detected = True and inv.conflict_details when they
+    disagree by more than EPSILON, so downstream routing sees the flag.
     """
-    # TODO (step 5): if inv.line_items is non-empty and inv.stated_total
-    # is not None, sum the line item amounts (skip None) and compare to
-    # stated_total + (stated_tax or 0). If the difference exceeds a small
-    # epsilon (say, $0.05), return a description.
+    # TODO (recipe 5): if both stated_total and calculated_total are present,
+    # compare them. If the absolute diff exceeds EPSILON, set
+    # inv.conflict_detected = True, populate inv.conflict_details with the
+    # two values and the signed diff, and return the description string.
+    # If only stated_total is present, fall back to summing line_items[].amount
+    # in code and comparing to stated_total + (stated_tax or 0).
     return None

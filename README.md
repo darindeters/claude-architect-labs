@@ -55,7 +55,7 @@ Total budget across all three: ~$20.
 These scaffolds are designed to pair with a study guide that walks
 through the exam concepts and maps each step to a file in the lab.
 
-📖 **Companion study guide:** <https://help.techwithdarin.com/certs/claude-architect/index.html>
+📖 **Companion study guide:** <https://learn.techwithdarin.com/certs/claude-architect/>
 
 You can absolutely use the labs without the guide — every `TODO`
 in the source is annotated with the step number and the underlying
@@ -190,7 +190,7 @@ internal training programs, or anything else you find useful.
 
 ## See also
 
-- 📖 [Companion study guide](https://help.techwithdarin.com/certs/claude-architect/index.html) — the five judgments the exam rewards, seven question patterns, and the day-of strategy
+- 📖 [Companion study guide](https://learn.techwithdarin.com/certs/claude-architect/) — the five judgments the exam rewards, seven question patterns, and the day-of strategy
 - 📚 [Anthropic Claude documentation](https://docs.claude.com/)
 - 🔧 [Claude Agent SDK (Python)](https://github.com/anthropics/claude-agent-sdk-python)
 - 🌐 [Model Context Protocol](https://modelcontextprotocol.io)

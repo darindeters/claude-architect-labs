@@ -44,8 +44,12 @@ Example 3 — conflicting totals:
 
 SYSTEM = (
     "You extract structured data from invoices. Use null for fields not present "
-    "in the source. Do NOT fabricate values to satisfy a schema field. If the "
-    "source has internally contradictory amounts, set conflict_detected=true.\n\n"
+    "in the source. Do NOT fabricate values to satisfy a schema field. "
+    "Compute stated_total (verbatim) and calculated_total (sum of line items, "
+    "computed by you INDEPENDENTLY) — these MUST be computed separately even if "
+    "they happen to match. If the source has internally contradictory amounts, "
+    "set conflict_detected=true and populate conflict_details with the two "
+    "values and the difference.\n\n"
     + FEW_SHOT_EXAMPLES
 )
 
