@@ -8,32 +8,93 @@ with a planted contradiction so you can practice provenance preservation.
 Companion walkthrough: <https://learn.techwithdarin.com/certs/claude-architect/#lab>
 (Lab 2 — seven recipes; each one maps to a flag or TODO in this scaffold.)
 
+> **First time running these labs?** Read the [pitfalls section in the root
+> README](../README.md#read-this-first--five-things-that-will-save-you-20-minutes)
+> first — Python version, shell quoting, and "what TODO stubs do by default."
+
 ## Prerequisites
 
-- Python 3.10+
-- An [Anthropic API key](https://console.anthropic.com)
-- ~$10 budget (multi-agent runs make more API calls than Lab 1)
+- **Python 3.10+** (3.12 recommended)
+- An [Anthropic API key](https://console.anthropic.com/settings/keys)
+- ~$10 budget (multi-agent runs make more API calls than Lab 1; the parallel-vs-sequential
+  timing comparison alone runs the full pipeline twice)
 
 ## Setup
 
 ```bash
 cd lab2-research
-python -m venv .venv
+python3.12 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-export ANTHROPIC_API_KEY=sk-ant-...
+cp .env.example .env                       # then edit .env and add your key
 ```
 
-## Run
+## First run — confirm the pipeline works
 
 ```bash
 python -m src.main "impact of AI on creative industries"
 ```
 
-The default coordinator prompt is deliberately *procedural and narrow* —
-this is the failure case from Question 7 of the sample exam. Recipe 3 of
-the lab is to swap it for a goals-and-criteria prompt and see the report
-widen.
+Expected output, roughly:
+
+```
+[coordinator] decomposing: 'impact of AI on creative industries'
+[coordinator] 3 subtasks:
+  - [web_search] AI tools used in visual arts
+  - [web_search] AI in music production
+  - [doc_analysis] analyze recent reports on AI in creative work
+[coordinator] dispatching subagents...
+[coordinator] dispatch took 14.32s (parallel)
+[coordinator] synthesizing...
+[coordinator] generating report...
+
+# AI Impact on Creative Industries
+
+## Visual Arts
+...
+```
+
+Total wall-clock is typically 35–55 seconds. The first `[coordinator]` line and the final
+markdown report are what to confirm. The subtask list is **decomposition output** — note
+how narrow it is. The default `ACTIVE_COORDINATOR_PROMPT = COORDINATOR_PROMPT_PROCEDURAL`
+is deliberately bad; the report will under-cover music, writing, and film. **That's
+intentional** — recipe 3 is to swap the prompt and watch the report widen.
+
+**If you see something else:**
+
+- *`[coordinator] could not parse decomposition: ...`* → The model returned malformed JSON
+  for its subtask list. Usually a one-off; re-run. If it keeps happening, pick a different
+  topic.
+- *Final report is empty or one paragraph* → Look for `[coordinator] 0 subtasks` in the log.
+  Decomposition failed; the synthesis step still ran but had only the local fixture
+  documents to work from.
+- *`anthropic.AuthenticationError`* → API key not in env. Check `echo $ANTHROPIC_API_KEY`.
+- *`TypeError: unsupported operand type(s) for |`* → Python 3.9. Make a fresh venv with 3.10+.
+
+## The fixtures
+
+`fixtures/documents/` ships four planted documents:
+
+| File | Topic | Notable |
+|---|---|---|
+| `visual_arts.txt` | AI in visual art (2024 data) | Standard reference |
+| `music_2024.txt` | AI in music production | Cites a "23% of new tracks use AI" stat (2024) |
+| `music_2025.txt` | AI in music production | Cites a "41% of new tracks use AI" stat (2025) — **temporal change vs music_2024** |
+| `writing_publishing.txt` | AI in publishing | Standard reference |
+
+The `music_2024` ↔ `music_2025` pair is the planted "contradiction" that's actually a
+temporal change. Recipe 5 tests whether your synthesis prompt distinguishes temporal
+change from real disagreement.
+
+## Lab toggles — the constants you flip
+
+All in `src/coordinator.py`:
+
+| Constant | Default | What it does |
+|---|---|---|
+| `PARALLEL_SPAWN` | `True` | `True` → fan out subagents concurrently via `ThreadPoolExecutor`. `False` → sequential. **Recipe 2** flips this and times both. |
+| `ACTIVE_COORDINATOR_PROMPT` | `COORDINATOR_PROMPT_PROCEDURAL` | Procedural ("Step 1: search…") vs `COORDINATOR_PROMPT_GOALS` (goals + criteria). **Recipe 3** swaps these. |
+| `SIMULATE_TIMEOUT` | `False` | When `True`, the `web_search` subagent short-circuits with a structured timeout payload. **Recipe 7** flips this. |
 
 ## Recipes → files
 
@@ -59,6 +120,108 @@ The lessons (parallel vs serial timing, decomposition prompts, provenance,
 conflict handling, coverage-gap signaling) survive the naming differences.
 Use whatever names the scaffold uses when you're coding; use the guide for
 the why.
+
+## What you should see per recipe
+
+### Recipe 2 — Parallel vs sequential timing
+
+Run with the default (`PARALLEL_SPAWN = True`):
+
+```bash
+time python -m src.main "compare AWS Bedrock, Vertex AI, and Azure Foundry"
+```
+
+Look for the dispatch timing line:
+
+```
+[coordinator] dispatch took 12.4s (parallel)
+```
+
+…and `time`'s total wall-clock around 30–40s.
+
+Now edit `src/coordinator.py`: `PARALLEL_SPAWN = False`. Re-run:
+
+```
+[coordinator] dispatch took 34.7s (sequential)
+```
+
+Wall-clock around 55–75s. The speedup ratio is `t_sequential / t_parallel` ≈ 2.5–3.5×.
+If you see less than 1.5×, your subagents are completing faster than the coordinator
+overhead — pick a topic that produces more subtasks.
+
+Restore `PARALLEL_SPAWN = True` when done.
+
+### Recipe 3 — Decomposition failure vs goals
+
+**Default — procedural prompt** (`ACTIVE_COORDINATOR_PROMPT = COORDINATOR_PROMPT_PROCEDURAL`):
+
+```bash
+python -m src.main "impact of AI on creative industries"
+```
+
+Expected: subtask list dominated by visual arts; music/writing/film barely mentioned in the
+final report:
+
+```
+[coordinator] 3 subtasks:
+  - [web_search] AI in visual arts
+  - [web_search] AI tools in design
+  - [doc_analysis] analyze provided documents
+```
+
+**After swap** to `COORDINATOR_PROMPT_GOALS`:
+
+```python
+# in src/coordinator.py
+ACTIVE_COORDINATOR_PROMPT = COORDINATOR_PROMPT_GOALS
+```
+
+Re-run the same topic. Expected: more subtasks, broader coverage:
+
+```
+[coordinator] 5 subtasks:
+  - [web_search] AI in visual arts
+  - [web_search] AI in music production
+  - [web_search] AI in writing and publishing
+  - [web_search] AI in film and video
+  - [doc_analysis] analyze provided documents on creative industries
+```
+
+The final report covers all the sub-domains the procedural prompt missed. Both reports
+side-by-side is the lesson — same model, same fixtures, only the coordinator prompt changed.
+
+### Recipe 7 — Simulated web-search timeout
+
+Set `SIMULATE_TIMEOUT = True` in `src/coordinator.py`. Re-run any topic that produces a
+`web_search` subtask:
+
+```bash
+python -m src.main "energy storage trends 2024"
+```
+
+Expected: the `web_search` subagent now returns a structured error payload instead of a
+search result. Watch the synthesis step's behavior — does it acknowledge the missing data
+or silently produce a partial report?
+
+```
+[coordinator] dispatching subagents...
+# (web_search returns isError: true with partial_results + alternative_approaches)
+[coordinator] synthesizing...
+[coordinator] generating report...
+
+# Energy Storage Trends 2024
+
+## Coverage gap
+The web-search subagent timed out for this query. The findings below are
+based on document analysis only; web-based 2024 reports were not incorporated.
+
+## Findings
+...
+```
+
+If the report doesn't acknowledge the gap, your synthesis prompt isn't catching the error
+shape — strengthen the `SYNTHESIS` subagent's system prompt to handle `isError: true`
+inputs explicitly.
 
 ## What success looks like
 

@@ -38,15 +38,99 @@ Pick a lab, hop in, run the boot command.
 git clone https://github.com/darindeters/claude-architect-labs.git
 cd claude-architect-labs/lab1-cs-agent
 
-python -m venv .venv && source .venv/bin/activate
+python3.12 -m venv .venv && source .venv/bin/activate    # see Python note below
 pip install -r requirements.txt
-export ANTHROPIC_API_KEY=sk-ant-...
+cp .env.example .env                                     # then edit .env and paste your key
+# OR: export ANTHROPIC_API_KEY=sk-ant-...                # one-shot, current shell only
 
-python -m src.agent "I need a refund on order ORD-1003"
+python -m src.agent "I am Bob Singh (bob@example.com). I need a refund on order ORD-1003."
 ```
 
 Each lab boots in 30 seconds against the [Anthropic API](https://docs.claude.com/en/api/overview).
 Total budget across all three: ~$20.
+
+Get your API key at <https://console.anthropic.com/settings/keys> — click "Create Key".
+
+---
+
+## Read this first — five things that will save you 20 minutes
+
+These are the issues every first-time runner hits. Skim them now; come back when you get stuck.
+
+### 1. Python 3.10 or newer is required
+
+If you see this on first run:
+
+```
+TypeError: unsupported operand type(s) for |: 'type' and 'NoneType'
+```
+
+…you're on Python 3.9 (the version macOS Command Line Tools ships). The scaffolds use the
+`str | None` union syntax from [PEP 604](https://peps.python.org/pep-0604/) which only
+landed in 3.10.
+
+Fix on macOS:
+
+```bash
+brew install python@3.12
+python3.12 -m venv .venv
+source .venv/bin/activate
+python --version           # should print 3.12.x or 3.13.x
+pip install -r requirements.txt
+```
+
+`python` inside the venv resolves to 3.12 regardless of what `python3` points at globally.
+
+### 2. Each invocation is one-shot, not a chat
+
+The agent isn't an interactive REPL. Every `python -m src.agent "..."` runs the loop to
+`stop_reason == "end_turn"`, prints the final reply, and exits. If the model asks for
+clarification, you don't type more — you re-run with a fuller prompt.
+
+**Bundle everything the agent needs into the first message:**
+
+```bash
+# Bad — the agent will ask "what's your name?" then exit
+python -m src.agent "I need a refund on ORD-1003"
+
+# Good — agent gets identity + intent in one shot
+python -m src.agent "I am Bob Singh (bob@example.com). I need a refund on order ORD-1003."
+```
+
+### 3. Shell `$` interacts with prompts that contain dollar signs
+
+A prompt like `"Refund ORD-1004 for $749"` inside **double quotes** runs into shell variable
+expansion: `$7` is an unset variable that expands to empty, and the agent receives
+`"Refund ORD-1004 for 49"`. The model can't see the amount and asks you to clarify.
+
+Two fixes — either works:
+
+```bash
+# Single quotes (no expansion)
+python -m src.agent 'I am Carmen Diaz. Refund ORD-1004 for $749.'
+
+# Or escape the dollar sign inside double quotes
+python -m src.agent "I am Carmen Diaz. Refund ORD-1004 for \$749."
+```
+
+### 4. TODO stubs in the scaffolds default to "allow everything"
+
+The hooks in `lab1-cs-agent/src/hooks.py` and the validators in `lab4-extract/src/validate.py`
+ship as TODO stubs that return permissive defaults. **This is intentional.** Before you
+implement the hook for step N, you should see the *baseline* behavior — refunds going
+through with no threshold check, totals not being flagged, etc. The lesson is the
+before/after comparison. If your first run looks "too permissive," you haven't done the
+step yet.
+
+Each step's README block names exactly which TODO to implement and what behavior to expect
+afterward.
+
+### 5. Watch stderr for tool traces
+
+The agent prints `→ calling get_customer({...})` lines to **stderr** as each tool fires.
+The final assistant text prints to stdout. If you're piping output, you'll lose the trace —
+either don't pipe, or redirect with `2>&1`. The trace is the most useful debugging signal
+in the loop; learn to read it.
 
 ---
 
